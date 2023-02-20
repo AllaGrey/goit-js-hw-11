@@ -1,14 +1,7 @@
 import axios from 'axios';
 
 const ENDPOINT = 'https://pixabay.com/api/';
-// const options = {
-//   headers: {
-//     key: '33677116-85723a5144d957b1da7c90df9',
-//     image_type: 'photo',
-//     orientation: 'horizontal',
-//     safesearch: true,
-//   },
-// };
+
 export default class FindPixabayPictures {
   constructor() {
     this.page = 1;
@@ -21,18 +14,6 @@ export default class FindPixabayPictures {
     const data = await response.data;
     this.incrementPage();
     return data;
-    // const { webformatURL, largeImageURL, tags, likes } = hits;
-
-    // console.log(response, 'resp');
-    // console.log(hits, 'hits');
-
-    // console.log(hits.webformatURL);
-    // return fetch(URL)
-    //   .then(response => response.json())
-    //   .then(({ webformatURL, largeImageURL, tags, likes }) => {
-    //     this.incrementPage();
-    //     console.log({ webformatURL, largeImageURL, tags, likes });
-    //   });
   }
 
   incrementPage() {

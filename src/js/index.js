@@ -36,17 +36,24 @@ async function fetchPictures() {
   try {
     const data = await findPixabayPictures.getPictures();
     const { totalHits, hits } = data;
+    const numberOfpages = Math.floor(totalHits / 40);
+    const currentPage = findPixabayPictures.page - 1;
+    loadMoreBtn.disable();
+    loadMoreBtn.hide();
 
     if (totalHits === 0 || findPixabayPictures.searchQuery === '') {
-      loadMoreBtn.disable();
-      loadMoreBtn.hide();
       throw new Error(
         'Sorry, there are no images matching your search query. Please try again.'
       );
-    } else {
+    } else if (numberOfpages > currentPage) {
       showQuantityPictures(totalHits);
       loadMoreBtn.show();
       loadMoreBtn.enable();
+    } else {
+      showQuantityPictures(totalHits);
+      // Notiflix.Notify.info(
+      //   "We're sorry, but you've reached the end of search results."
+      // );
     }
 
     const markup = hits.map(picture => createMarkup(picture)).join('');
@@ -62,26 +69,22 @@ function onLoadMoreBtn() {
 }
 
 async function loadMorePictures() {
-  try {
-    const data = await findPixabayPictures.getPictures();
-    const { totalHits, hits } = data;
-    const numberOfpages = Math.floor(totalHits / 40);
-    const currentPage = findPixabayPictures.page - 1;
+  const data = await findPixabayPictures.getPictures();
+  const { totalHits, hits } = data;
+  const numberOfpages = Math.floor(totalHits / 40);
+  const currentPage = findPixabayPictures.page - 1;
 
-    if (numberOfpages === currentPage) {
-      loadMoreBtn.disable();
-      loadMoreBtn.hide();
-      Notiflix.Notify.info(
-        "We're sorry, but you've reached the end of search results."
-      );
-    }
-
-    const markup = hits.map(picture => createMarkup(picture)).join('');
-    loadMoreUpdateGallery(markup);
-    loadMoreBtn.enable();
-  } catch (err) {
-    onError(err);
+  if (numberOfpages === currentPage) {
+    loadMoreBtn.disable();
+    loadMoreBtn.hide();
+    Notiflix.Notify.info(
+      "We're sorry, but you've reached the end of search results."
+    );
   }
+
+  const markup = hits.map(picture => createMarkup(picture)).join('');
+  loadMoreUpdateGallery(markup);
+  loadMoreBtn.enable();
 }
 
 function onError(err) {
